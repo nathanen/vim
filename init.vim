@@ -6,6 +6,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'terryma/vim-smooth-scroll'
