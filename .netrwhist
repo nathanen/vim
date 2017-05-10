@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/Users/nensmeng'
+let g:netrw_dirhist_2='/Users/nensmeng/.spacemacs.d'
+let g:netrw_dirhist_3='/Users/nensmeng'
+let g:netrw_dirhist_4='/Users/nensmeng/.spacemacs.d'
+let g:netrw_dirhist_5='/Users/nensmeng/scratch'
