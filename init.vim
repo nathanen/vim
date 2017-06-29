@@ -56,7 +56,7 @@ endif
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 set background=dark
-colorscheme tender
+" colorscheme tender
 let g:lightline = { 'colorscheme': 'tender' }
 
 " colorscheme quantum
