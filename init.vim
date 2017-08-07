@@ -53,10 +53,10 @@ syntax on
 if has("termguicolors")
     set termguicolors
 endif
-" let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 set background=dark
-" colorscheme tender
+colorscheme tender
 let g:lightline = { 'colorscheme': 'tender' }
 
 " colorscheme quantum
@@ -66,12 +66,16 @@ let g:lightline = { 'colorscheme': 'tender' }
 let macvim_skip_colorscheme=1
 set guifont=Hack:h14
 set laststatus=2
-hi FoldColumn ctermbg=none
-set foldcolumn=3
+" hi FoldColumn ctermbg=none
+set foldcolumn=2
 set foldlevelstart=20
 			
 set linespace=2
 set wrap linebreak nolist
+
+" if has("nvim")
+"     set inccommand=nosplit
+" endif
 
 noremap  <buffer> <silent> k gk
 noremap  <buffer> <silent> j gj
@@ -134,8 +138,23 @@ nnoremap x "_x
 " ctrl-j inserts blank line above
 nnoremap <C-J> maO<Esc>`a
 
-"- Neovim Terminal Mappings
-nnoremap <Esc> <C-\><C-n> | " Use escape key to exit terminal input
+
+if has("nvim")
+  " Make escape work in the Neovim terminal.
+  tnoremap <Esc> <C-\><C-n>
+
+  " Make navigation into and out of Neovim terminal splits nicer.
+  tnoremap <C-h> <C-\><C-N><C-w>h
+  tnoremap <C-j> <C-\><C-N><C-w>j
+  tnoremap <C-k> <C-\><C-N><C-w>k
+  tnoremap <C-l> <C-\><C-N><C-w>l
+
+  " I like relative numbering when in normal mode.
+  autocmd TermOpen * setlocal conceallevel=0 colorcolumn=0 relativenumber
+
+  " Prefer Neovim terminal insert mode to normal mode.
+  autocmd BufEnter term://* startinsert
+endif
 
 
 let g:EasyMotion_do_mapping = 0 " Disable default mappings

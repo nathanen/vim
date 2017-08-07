@@ -1,1 +1,1 @@
-colorscheme macvim
+colorscheme onedark
