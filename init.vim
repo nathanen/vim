@@ -94,6 +94,8 @@ set number
 " remap semi-colon to colon
 nnoremap ; :
 
+imap jj <Esc>
+
 " git@github.com:terryma/vim-smooth-scroll.git
 noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 30, 2)<CR>
