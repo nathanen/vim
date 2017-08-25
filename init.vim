@@ -111,6 +111,7 @@ set incsearch
 " don't highlight all search matches
 " set nohlsearch
 
+set spell
 set spelllang=en
 
 let g:markdown_folding = 1
