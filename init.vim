@@ -15,6 +15,7 @@ Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'matze/vim-move'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-markdown'
 Plug 'itchyny/lightline.vim'
 Plug 'easymotion/vim-easymotion'
@@ -29,6 +30,14 @@ Plug 'bling/vim-bufferline'
 Plug 'scrooloose/nerdtree'
 Plug 'lervag/vimtex'
 Plug 'reedes/vim-pencil'
+Plug 'jpo/vim-railscasts-theme'
+Plug 'sonph/onehalf'
+Plug 'reedes/vim-colors-pencil'
+Plug 'rakr/vim-one'
+Plug 'lervag/vimtex'
+Plug 'haya14busa/incsearch.vim'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -50,6 +59,10 @@ set hidden
 set cursorline
 syntax on
 
+set splitright " Split to right by default
+
+let mapleader = ','
+
 if has("termguicolors")
     set termguicolors
 endif
@@ -65,6 +78,16 @@ let g:lightline = { 'colorscheme': 'tender' }
 
 let macvim_skip_colorscheme=1
 set guifont=Hack:h14
+" set guifont=Source\ Code\ Pro:h16
+
+:if has('gui_running')
+    colorscheme pencil
+    set background=light
+    let g:pencil_spell_undercurl = 0
+:endif
+
+
+
 set laststatus=2
 " hi FoldColumn ctermbg=none
 set foldcolumn=2
@@ -106,8 +129,24 @@ set smartcase
 
 " search characters as they're entered
 set incsearch
-" don't highlight all search matches
-" set nohlsearch
+
+
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+set hlsearch " highlight searches
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+set gdefault " use global flag by default in s: commands
+set ignorecase 
+set smartcase " don't ignore capitals in searches
+nnoremap <leader><space> :nohls <enter>
+
 
 set spell
 set spelllang=en
@@ -157,8 +196,13 @@ if has("nvim")
   autocmd BufEnter term://* startinsert
 endif
 
+" move between, close buffers
+nnoremap <C-H> :bp <enter>
+nnoremap <C-L> :bn <enter>
+" nnoremap <Leader>w :w <enter>
+" nnoremap <Leader>q :bd <enter>
 
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " Need one more keystroke, but on average, it may be more comfortable.
@@ -192,4 +236,33 @@ function! MyFoldText() " {{{
     return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
 endfunction " }}}
 set foldtext=MyFoldText()
+
+
+set rtp+=/usr/local/opt/fzf
+
+" Similarly, we can apply it to fzf#vim#grep. To use ripgrep instead of ag:
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+nnoremap <leader>f :Files<cr>
+nnoremap <leader>b :Buffers<cr>
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
