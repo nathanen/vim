@@ -7,6 +7,12 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 
+
+
+
+
+
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'terryma/vim-smooth-scroll'
@@ -37,7 +43,8 @@ Plug 'rakr/vim-one'
 Plug 'lervag/vimtex'
 Plug 'haya14busa/incsearch.vim'
 Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'https://github.com/Alok/notational-fzf-vim'
 
 " Initialize plugin system
 call plug#end()
@@ -76,14 +83,15 @@ let g:lightline = { 'colorscheme': 'tender' }
 " let g:quantum_black = 1
 " let g:airline_theme='quantum'
 
-let macvim_skip_colorscheme=1
-set guifont=Hack:h14
-" set guifont=Source\ Code\ Pro:h16
 
 :if has('gui_running')
     colorscheme pencil
     set background=light
     let g:pencil_spell_undercurl = 0
+let macvim_skip_colorscheme=1
+set macmeta
+set guifont=Hack:h14
+" set guifont=Source\ Code\ Pro:h16
 :endif
 
 
@@ -104,6 +112,10 @@ noremap  <buffer> <silent> k gk
 noremap  <buffer> <silent> j gj
 noremap  <buffer> <silent> 0 g0
 noremap  <buffer> <silent> $ g$
+" allows for ctrl-e (end) and ctrl-a (start) in insert mode
+inoremap <C-e> <C-o>$
+inoremap <C-a> <C-o>0
+
 
 
 " Display relative line numbers
@@ -116,8 +128,6 @@ set number
 
 " remap semi-colon to colon
 nnoremap ; :
-
-imap jj <Esc>
 
 " git@github.com:terryma/vim-smooth-scroll.git
 noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
@@ -178,10 +188,15 @@ vmap x "_d
 nnoremap x "_x
 
 " ctrl-j inserts blank line above
-nnoremap <C-J> maO<Esc>`a
-
+" nnoremap <C-J> maO<Esc>`a
+" Ctrl-j/k deletes blank line below/above, and Alt-j/k inserts.
+nnoremap <silent><C-j> m`:silent +g/\m^\s*$/d<CR>``:noh<CR>
+nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
+nnoremap <silent><M-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><M-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
 if has("nvim")
+
   " Make escape work in the Neovim terminal.
   tnoremap <Esc> <C-\><C-n>
 
@@ -268,3 +283,5 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
+let g:nv_search_paths = ['/Users/nensmeng/data/1-academic/simplenotes']
+" let g:nv_search_paths = ['/tmp/test-nvim']
