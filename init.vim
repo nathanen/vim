@@ -29,8 +29,8 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'MaxSt/FlatColor'
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 " Plug 'ryanoasis/vim-devicons'
 Plug 'bling/vim-bufferline'
 Plug 'scrooloose/nerdtree'
@@ -77,7 +77,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 set background=dark
 colorscheme tender
-let g:lightline = { 'colorscheme': 'tender' }
+"let g:lightline = { 'colorscheme': 'tender' }
 
 " colorscheme quantum
 " let g:quantum_black = 1
@@ -85,13 +85,17 @@ let g:lightline = { 'colorscheme': 'tender' }
 
 
 :if has('gui_running')
-    colorscheme pencil
     set background=light
+    let g:one_allow_italics = 1 
+    colorscheme one
+   let g:airline_theme='one'
+    " colorscheme pencil
     let g:pencil_spell_undercurl = 0
-let macvim_skip_colorscheme=1
-set macmeta
-set guifont=Hack:h14
-" set guifont=Source\ Code\ Pro:h16
+    let macvim_skip_colorscheme=1
+    set macmeta
+    set linespace=3
+    set guifont=Hack:h16
+    " set guifont=Source\ Code\ Pro:h16
 :endif
 
 
