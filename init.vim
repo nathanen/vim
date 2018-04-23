@@ -22,26 +22,37 @@ Plug 'matze/vim-move'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-markdown'
+" Plug 'gabrielelana/vim-markdown'
+" Plug 'vim-pandoc/vim-pandoc'
+" Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'itchyny/lightline.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'joshdick/onedark.vim'
-Plug 'MaxSt/FlatColor'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'kien/ctrlp.vim'
+" , {'on': ['CtrlP', 'CtrlPMixed', 'CtrlPMRU', 'CtrlBuffers']}
+let g:ctrlp_working_path_mode = 'c'
+
+
+" Plug 'MaxSt/FlatColor'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 " Plug 'ryanoasis/vim-devicons'
 Plug 'bling/vim-bufferline'
+Plug 'wimstefan/vim-artesanal'
+Plug 'endel/vim-github-colorscheme'
 Plug 'scrooloose/nerdtree'
 Plug 'lervag/vimtex'
 Plug 'reedes/vim-pencil'
-Plug 'jpo/vim-railscasts-theme'
-Plug 'sonph/onehalf'
-Plug 'reedes/vim-colors-pencil'
-Plug 'rakr/vim-one'
+" Plug 'jpo/vim-railscasts-theme'
+Plug 'jceb/vim-orgmode'
+" Plug 'sonph/onehalf'
+" Plug 'reedes/vim-colors-pencil'
+" Plug 'rakr/vim-one'
+Plug 'fenetikm/falcon'
 Plug 'lervag/vimtex'
-Plug 'haya14busa/incsearch.vim'
+" Plug 'https://github.com/haya13busa/is.vim'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'https://github.com/Alok/notational-fzf-vim'
@@ -50,6 +61,7 @@ Plug 'https://github.com/Alok/notational-fzf-vim'
 call plug#end()
 
 filetype plugin indent on
+
 
 nmap <silent> ,ev :e /Users/nensmeng/.config/nvim/init.vim<cr>
 set backupdir=~/.vim/backups
@@ -65,18 +77,29 @@ set guioptions-=r   "hide right scrollbar
 set hidden
 set cursorline
 syntax on
+highlight clear LineNr "set number background to default
+highlight clear SignColumn
+autocmd Colorscheme * highlight FoldColumn guifg=bg guibg=bg
+autocmd Colorscheme * highlight clear LineNr
 
 set splitright " Split to right by default
 
 let mapleader = ','
+
+nnoremap <Silent> <Space>f :CtrlP<CR>
+nnoremap <silent> <Space>m :CtrlPMixed<CR>
+nnoremap <silent> <Space>r :CtrlPMRU<CR>
+nnoremap <leader>f :CtrlPCurFile<CR>
+nnoremap <leader>b :CtrlPBuffer<CR>
 
 if has("termguicolors")
     set termguicolors
 endif
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-set background=dark
-colorscheme tender
+" set background=dark
+" colorscheme tender
+" colorscheme falcon
 "let g:lightline = { 'colorscheme': 'tender' }
 
 " colorscheme quantum
@@ -85,10 +108,12 @@ colorscheme tender
 
 
 :if has('gui_running')
-    set background=light
-    let g:one_allow_italics = 1 
-    colorscheme one
-   let g:airline_theme='one'
+    " set background=light
+    " colorscheme one
+set background=dark
+colorscheme falcon
+    " let g:one_allow_italics = 1 
+   " let g:airline_theme='one'
     " colorscheme pencil
     let g:pencil_spell_undercurl = 0
     let macvim_skip_colorscheme=1
@@ -195,7 +220,7 @@ nnoremap x "_x
 " nnoremap <C-J> maO<Esc>`a
 " Ctrl-j/k deletes blank line below/above, and Alt-j/k inserts.
 nnoremap <silent><C-j> m`:silent +g/\m^\s*$/d<CR>``:noh<CR>
-nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
+nnoremap <silent><C-k> m`:silent -g/\m^silent\s*$/d<CR>``:noh<CR>
 nnoremap <silent><M-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
 nnoremap <silent><M-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
@@ -258,7 +283,6 @@ function! MyFoldText() " {{{
 endfunction " }}}
 set foldtext=MyFoldText()
 
-
 set rtp+=/usr/local/opt/fzf
 
 " Similarly, we can apply it to fzf#vim#grep. To use ripgrep instead of ag:
@@ -268,8 +292,11 @@ command! -bang -nargs=* Rg
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
-nnoremap <leader>f :Files<cr>
-nnoremap <leader>b :Buffers<cr>
+" nnoremap <leader>f :Files<cr>
+" nnoremap <leader>b :Buffers<cr>
+
+
+
 
 " Customize fzf colors to match your color scheme
 let g:fzf_colors =
@@ -287,5 +314,8 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
-let g:nv_search_paths = ['/Users/nensmeng/data/1-academic/simplenotes']
+let g:nv_search_paths = ['/Users/nensmeng/Data/1-academic/simplenotes']
+let g:nv_use_short_pathnames = 1
 " let g:nv_search_paths = ['/tmp/test-nvim']
+let g:nv_preview_direction = 'up'
+nnoremap <leader>n :NV<cr>
