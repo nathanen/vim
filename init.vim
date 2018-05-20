@@ -25,6 +25,10 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'jceb/vim-orgmode'
 Plug 'vim-pandoc/vim-pandoc-after'   "need to set specific modules
+Plug 'vimwiki/vimwiki'
+
+au FileType vimwiki set syntax=pandoc
+
 
 " VIM THEMES/COLORSCHEMES
 " Plug 'rakr/vim-one'
@@ -35,6 +39,7 @@ Plug 'vim-pandoc/vim-pandoc-after'   "need to set specific modules
 " Plug 'joshdick/onedark.vim'
 " Plug 'reedes/vim-colors-pencil'
 " Plug 'MaxSt/FlatColor'
+Plug 'morhetz/gruvbox'
 Plug 'endel/vim-github-colorscheme'
 
 " Light themes
@@ -110,8 +115,8 @@ if has("termguicolors")
 endif
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-" set background=dark
-set background=light
+set background=dark
+ " set background=light
 " colorscheme tender
 " colorscheme falcon
 "let g:lightline = { 'colorscheme': 'tender' }
@@ -129,6 +134,7 @@ set background=light
     " let g:one_allow_italics = 1 
    " let g:airline_theme='one'
     " colorscheme pencil
+    colorscheme Mustang
     let g:pencil_spell_undercurl = 0
     let macvim_skip_colorscheme=1
     set macmeta
@@ -139,7 +145,8 @@ set background=light
 
 :if exists("g:gui_oni")
     set guifont=Hack:h16
-    colorscheme artesanal
+    " colorscheme artesanal
+    colorscheme Mustang
 :endif
 
 
@@ -162,6 +169,10 @@ noremap  <buffer> <silent> $ g$
 " allows for ctrl-e (end) and ctrl-a (start) in insert mode
 inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>0
+
+" also in normal mode
+noremap <C-e> <C-o>$
+noremap <C-a> <C-o>0
 
  "Switch to buffer by number
 nnoremap 1<tab> :1b<CR>
@@ -186,7 +197,7 @@ set number
 nnoremap ; :
 
 " git@github.com:terryma/vim-smooth-scroll.git
-noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 30, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 30, 2)<CR>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 30, 4)<CR>
 noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 30, 4)<CR>
@@ -221,9 +232,17 @@ nmap <A-k> <Plug>MoveLineUp
 
 set spell
 set spelllang=en
+set omnifunc=syntaxcomplete#Complete
+set completeopt=longest,menuone
+
 
 let g:markdown_folding = 1
 command! Marked silent !open -a "Marked 2.app" "%:p"
+
+
+let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes',  'syntax': 'markdown', 'ext': '.txt'}]
+" let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes'}]
+
 
 
 " use leader to interact with the system clipboard
@@ -328,6 +347,7 @@ set encoding=utf8
     " nnoremap <leader>b :Buffers<cr>
     let g:nv_search_paths = ['/Users/nensmeng/Data/1-academic/simplenotes']
     let g:nv_use_short_pathnames = 1
+    let g:nv_default_extension = '.txt'
     " let g:nv_search_paths = ['/tmp/test-nvim']
     let g:nv_preview_direction = 'up'
     nnoremap <leader>n :NV<cr>
