@@ -17,6 +17,12 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'terryma/vim-smooth-scroll' 
 Plug 'haya14busa/incsearch.vim'
+Plug 'ervandew/supertab'
+Plug 'sjl/gundo.vim'
+
+if has('python3')
+    let g:gundo_prefer_python3 = 1
+endif
 
 " Filetypes & Syntax
 " Plug 'gabrielelana/vim-markdown'
@@ -31,10 +37,10 @@ au FileType vimwiki set syntax=pandoc
 
 
 " VIM THEMES/COLORSCHEMES
-" Plug 'rakr/vim-one'
-" Plug 'tyrannicaltoucan/vim-quantum'
-" Plug 'jpo/vim-railscasts-theme'
-" Plug 'fenetikm/falcon'
+Plug 'rakr/vim-one'
+Plug 'tyrannicaltoucan/vim-quantum'
+Plug 'jpo/vim-railscasts-theme'
+Plug 'fenetikm/falcon'
 " Plug 'jacoborus/tender.vim
 " Plug 'joshdick/onedark.vim'
 " Plug 'reedes/vim-colors-pencil'
@@ -77,6 +83,8 @@ call plug#end()
 
 filetype plugin indent on
 
+set nocompatible
+
 
 nmap <silent> ,ev :e /Users/nensmeng/.config/nvim/init.vim<cr>
 set backupdir=~/.vim/backups
@@ -99,7 +107,7 @@ autocmd Colorscheme * highlight clear LineNr
 
 set splitright " Split to right by default
 set wildmode=longest,list
-
+set wildmenu
 
 nnoremap <SPACE> <Nop>
 let mapleader = "\<Space>"
@@ -126,29 +134,60 @@ set background=dark
 " let g:airline_theme='quantum'
 
 
-:if has('gui_running')
-    " set background=light
-    " colorscheme one
-" set background=dark
-" colorscheme falcon
-    " let g:one_allow_italics = 1 
-   " let g:airline_theme='one'
-    " colorscheme pencil
-    colorscheme Mustang
-    let g:pencil_spell_undercurl = 0
-    let macvim_skip_colorscheme=1
-    set macmeta
-    set linespace=3
-    set guifont=Hack:h16
-    " set guifont=Source\ Code\ Pro:h16
-:endif
+if has('gui_running')
+	" set background=light
+	" colorscheme one
+	" set background=dark
+	" colorscheme falcon
+	" let g:one_allow_italics = 1 
+	" let g:airline_theme='one'
+	" colorscheme pencil
+	colorscheme Mustang
+	let g:pencil_spell_undercurl = 0
+	let macvim_skip_colorscheme=1
+	set macmeta
+	set linespace=3
+	set guifont=Hack:h16
+	" set guifont=Source\ Code\ Pro:h16
+else
+	colorscheme quantum
+endif
 
-:if exists("g:gui_oni")
-    set guifont=Hack:h16
-    " colorscheme artesanal
-    colorscheme Mustang
-:endif
+if exists("g:gui_oni")
+		set guifont=Hack:h16
+		" colorscheme artesanal
+		colorscheme Mustang
+		" the following is required for oni-minimal
+		filetype off                  " required
+		set noswapfile
+		set smartcase
 
+		" Turn off statusbar, because it is externalized
+		set noshowmode
+		set noruler
+		set laststatus=0
+		set noshowcmd
+
+		" Enable GUI mouse behavior
+		set mouse=a
+endif
+
+
+if has("nvim")
+	" Make escape work in the Neovim terminal.
+	tnoremap <Esc> <C-\><C-n>
+	" Make navigation into and out of Neovim terminal splits nicer.
+	tnoremap <C-h> <C-\><C-N><C-w>h
+	tnoremap <C-j> <C-\><C-N><C-w>j
+	tnoremap <C-k> <C-\><C-N><C-w>k
+	tnoremap <C-l> <C-\><C-N><C-w>l
+
+	" I like relative numbering when in normal mode.
+	autocmd TermOpen * setlocal conceallevel=0 colorcolumn=0 relativenumber
+
+	" Prefer Neovim terminal insert mode to normal mode.
+	autocmd BufEnter term://* startinsert
+endif
 
 set laststatus=0
 " hi FoldColumn ctermbg=none
@@ -157,10 +196,10 @@ set foldlevelstart=20
 			
 set linespace=2
 set wrap linebreak nolist
+set tabstop=4 
 
-" if has("nvim")
-"     set inccommand=nosplit
-" endif
+set relativenumber
+set number
 
 noremap  <buffer> <silent> k gk
 noremap  <buffer> <silent> j gj
@@ -171,8 +210,8 @@ inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>0
 
 " also in normal mode
-noremap <C-e> <C-o>$
-noremap <C-a> <C-o>0
+noremap <C-e> $
+noremap <C-a> 0
 
  "Switch to buffer by number
 nnoremap 1<tab> :1b<CR>
@@ -185,13 +224,6 @@ nnoremap 7<tab> :7b<CR>
 nnoremap 8<tab> :8b<CR>
 nnoremap 9<tab> :9b<CR>
 
-" Display relative line numbers
-set relativenumber
-" display the absolute line number at the line you're on
-set number
-
-" live preview for replace
-" set inccommand=split
 
 " remap semi-colon to colon
 nnoremap ; :
@@ -229,12 +261,22 @@ nmap <A-k> <Plug>MoveLineUp
     map g* <Plug>(incsearch-nohl-g*)
     map g# <Plug>(incsearch-nohl-g#)
 
-
+nnoremap <Leader>u :GundoToggle<CR>
 set spell
 set spelllang=en
 set omnifunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
 
+" automatically switch working directory to current file
+autocmd BufEnter * silent! lcd %:p:h
+
+let g:vimtex_index_split_pos='botright'  
+
+   let g:vimtex_toc_hotkeys = {
+        \ 'enabled' : 1,
+        \ 'leader' : ';',
+        \ 'keys' : 'abcdefghijklmnopqrstuvxyz',
+        \}
 
 let g:markdown_folding = 1
 command! Marked silent !open -a "Marked 2.app" "%:p"
@@ -276,21 +318,6 @@ nnoremap x "_x
 " nnoremap <silent><M-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
 
-if has("nvim")
-  " Make escape work in the Neovim terminal.
-  tnoremap <Esc> <C-\><C-n>
-  " Make navigation into and out of Neovim terminal splits nicer.
-  tnoremap <C-h> <C-\><C-N><C-w>h
-  tnoremap <C-j> <C-\><C-N><C-w>j
-  tnoremap <C-k> <C-\><C-N><C-w>k
-  tnoremap <C-l> <C-\><C-N><C-w>l
-
-  " I like relative numbering when in normal mode.
-  autocmd TermOpen * setlocal conceallevel=0 colorcolumn=0 relativenumber
-
-  " Prefer Neovim terminal insert mode to normal mode.
-  autocmd BufEnter term://* startinsert
-endif
 
 " move between, close buffers
 nnoremap <C-H> :bp <enter>
@@ -316,21 +343,23 @@ set encoding=utf8
 " let g:airline_powerline_fonts = 1
 " let g:airline#extensions#tabline#enabled = 1
 
-"     let line = getline(v:foldstart)
 
-"     let nucolwidth = &fdc + &number * &numberwidth
-"     let windowwidth = winwidth(0) - nucolwidth - 3
-"     let foldedlinecount = v:foldend - v:foldstart
+function! MyFoldText() " {{{
+    let line = getline(v:foldstart)
 
-"     " expand tabs into spaces
-"     let onetab = strpart('          ', 0, &tabstop)
-"     let line = substitute(line, '\t', onetab, 'g')
+    let nucolwidth = &fdc + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth - 3
+    let foldedlinecount = v:foldend - v:foldstart
 
-"     let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-"     let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-"     return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
-" endfunction " }}}
-" set foldtext=MyFoldText()
+    " expand tabs into spaces
+    let onetab = strpart('          ', 0, &tabstop)
+    let line = substitute(line, '\t', onetab, 'g')
+
+    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
+endfunction " }}}
+set foldtext=MyFoldText()
 
 
 " FZF/Fuzzy Searching
