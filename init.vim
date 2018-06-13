@@ -12,26 +12,30 @@ call plug#begin('~/.vim/plugged')
 " Movement & Manipulation
 Plug 'matze/vim-move'
 Plug 'easymotion/vim-easymotion'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'terryma/vim-smooth-scroll' 
-Plug 'haya14busa/incsearch.vim'
+" Plug 'haya14busa/incsearch.vim'
 Plug 'ervandew/supertab'
 Plug 'sjl/gundo.vim'
+Plug 'kana/vim-textobj-user'
+Plug 'reedes/vim-textobj-sentence'
+Plug 'machakann/vim-highlightedyank'
 
-if has('python3')
-    let g:gundo_prefer_python3 = 1
-endif
+" if has('python3')
+"     let g:gundo_prefer_python3 = 1
+" endif
 
 " Filetypes & Syntax
 " Plug 'gabrielelana/vim-markdown'
+Plug 'vimwiki/vimwiki' 
 Plug 'lervag/vimtex'
+Plug 'jceb/vim-orgmode'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'jceb/vim-orgmode'
 Plug 'vim-pandoc/vim-pandoc-after'   "need to set specific modules
-Plug 'vimwiki/vimwiki'
+" Plug 'vim-pandoc/vim-markdownfootnotes'
 
 au FileType vimwiki set syntax=pandoc
 
@@ -41,10 +45,10 @@ Plug 'rakr/vim-one'
 Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'jpo/vim-railscasts-theme'
 Plug 'fenetikm/falcon'
-" Plug 'jacoborus/tender.vim
+Plug 'jacoborus/tender.vim'
 " Plug 'joshdick/onedark.vim'
 " Plug 'reedes/vim-colors-pencil'
-" Plug 'MaxSt/FlatColor'
+Plug 'MaxSt/FlatColor'
 Plug 'morhetz/gruvbox'
 Plug 'endel/vim-github-colorscheme'
 
@@ -64,7 +68,12 @@ Plug 'itchyny/lightline.vim'
 Plug 'junegunn/limelight.vim'
 " Plug 'msprev/unite-bibtex'
 " Plug 'rhysd/vim-grammarous'
-" Plu 'dbmrq/vim-ditto'
+" Plug 'dbmrq/vim-ditto'
+Plug 'reedes/vim-litecorrect'
+" Plug 'reedes/vim-lexical'
+
+" call litecorrect#init()
+
 
 " Interface
 Plug 'bling/vim-bufferline'
@@ -81,12 +90,13 @@ let g:ctrlp_working_path_mode = 'c'
 " Initialize plugin system
 call plug#end()
 
-filetype plugin indent on
+filetype plugin on
 
 set nocompatible
 
 
 nmap <silent> ,ev :e /Users/nensmeng/.config/nvim/init.vim<cr>
+nmap <silent> ,md :e /Users/nensmeng/scratch/markdown/markdown-sample.txt<cr>
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 
@@ -100,10 +110,19 @@ set guioptions-=r   "hide right scrollbar
 set hidden
 " set cursorline
 syntax on
-highlight clear LineNr "set number background to default
-highlight clear SignColumn
-autocmd Colorscheme * highlight FoldColumn guifg=bg guibg=bg
-autocmd Colorscheme * highlight clear LineNr
+
+set laststatus=0
+hi FoldColumn ctermbg=none
+set foldcolumn=2
+set foldlevelstart=20
+
+set linespace=2
+set wrap linebreak nolist
+set tabstop=4 
+
+set relativenumber
+set number
+set backspace=indent,eol,start
 
 set splitright " Split to right by default
 set wildmode=longest,list
@@ -117,6 +136,10 @@ nnoremap  <leader>m :CtrlPMixed<CR>
 nnoremap <leader>r :CtrlPMRU<CR>
 nnoremap <leader>f :CtrlPCurFile<CR>
 nnoremap <leader>b :CtrlPBuffer<CR>
+
+" Omnicomplete Better Nav
+inoremap <expr> <c-j> ("\<C-n>")
+inoremap <expr> <c-k> ("\<C-p>")
 
 if has("termguicolors")
     set termguicolors
@@ -147,18 +170,18 @@ if has('gui_running')
 	let macvim_skip_colorscheme=1
 	set macmeta
 	set linespace=3
-	set guifont=Hack:h16
+	set guifont=Hack:h15
 	" set guifont=Source\ Code\ Pro:h16
 else
 	colorscheme quantum
 endif
 
 if exists("g:gui_oni")
-		set guifont=Hack:h16
+		" set guifont=Hack:h16
 		" colorscheme artesanal
 		colorscheme Mustang
 		" the following is required for oni-minimal
-		filetype off                  " required
+		" filetype off                  " required 
 		set noswapfile
 		set smartcase
 
@@ -189,17 +212,6 @@ if has("nvim")
 	autocmd BufEnter term://* startinsert
 endif
 
-set laststatus=0
-" hi FoldColumn ctermbg=none
-set foldcolumn=2
-set foldlevelstart=20
-			
-set linespace=2
-set wrap linebreak nolist
-set tabstop=4 
-
-set relativenumber
-set number
 
 noremap  <buffer> <silent> k gk
 noremap  <buffer> <silent> j gj
@@ -246,26 +258,30 @@ nmap <A-k> <Plug>MoveLineUp
     set smartcase
     set incsearch     " search characters as they're entered
     set hlsearch " highlight searches
+	set wrapscan
     let g:incsearch#auto_nohlsearch = 1
     set gdefault " use global flag by default in s: commands
     set smartcase " don't ignore capitals in searches
-    nnoremap <leader><space> :nohls <enter>
+    " nnoremap <leader><space> :nohls <enter>
+	cnoremap <Tab> <CR>/<up>
 
-    map /  <Plug>(incsearch-forward)
-    map ?  <Plug>(incsearch-backward)
-    map g/ <Plug>(incsearch-stay)
-    map n  <Plug>(incsearch-nohl-n)
-    map N  <Plug>(incsearch-nohl-N)
-    map *  <Plug>(incsearch-nohl-*)
-    map #  <Plug>(incsearch-nohl-#)
-    map g* <Plug>(incsearch-nohl-g*)
-    map g# <Plug>(incsearch-nohl-g#)
+    " map /  <Plug>(incsearch-forward)
+    " map ?  <Plug>(incsearch-backward)
+    " map g/ <Plug>(incsearch-stay)
+    " map n  <Plug>(incsearch-nohl-n)
+    " map N  <Plug>(incsearch-nohl-N)
+    " map *  <Plug>(incsearch-nohl-*)
+    " map #  <Plug>(incsearch-nohl-#)
+    " map g* <Plug>(incsearch-nohl-g*)
+    " map g# <Plug>(incsearch-nohl-g#)
 
 nnoremap <Leader>u :GundoToggle<CR>
 set spell
 set spelllang=en
 set omnifunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
+
+nmap <LocalLeader>f <Plug>AddVimFootnote
 
 " automatically switch working directory to current file
 autocmd BufEnter * silent! lcd %:p:h
@@ -285,7 +301,7 @@ command! Marked silent !open -a "Marked 2.app" "%:p"
 let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes',  'syntax': 'markdown', 'ext': '.txt'}]
 " let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes'}]
 
-
+ 
 
 " use leader to interact with the system clipboard
 nnoremap <Leader>p "*]p
@@ -343,25 +359,6 @@ set encoding=utf8
 " let g:airline_powerline_fonts = 1
 " let g:airline#extensions#tabline#enabled = 1
 
-
-function! MyFoldText() " {{{
-    let line = getline(v:foldstart)
-
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
-    let foldedlinecount = v:foldend - v:foldstart
-
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
-
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
-endfunction " }}}
-set foldtext=MyFoldText()
-
-
 " FZF/Fuzzy Searching
     set rtp+=/usr/local/opt/fzf
 
@@ -376,7 +373,7 @@ set foldtext=MyFoldText()
     " nnoremap <leader>b :Buffers<cr>
     let g:nv_search_paths = ['/Users/nensmeng/Data/1-academic/simplenotes']
     let g:nv_use_short_pathnames = 1
-    let g:nv_default_extension = '.txt'
+    let g:nv_default_extension = '.txt' 
     " let g:nv_search_paths = ['/tmp/test-nvim']
     let g:nv_preview_direction = 'up'
     nnoremap <leader>n :NV<cr>
@@ -396,4 +393,45 @@ set foldtext=MyFoldText()
       \ 'marker':  ['fg', 'Keyword'],
       \ 'spinner': ['fg', 'Label'],
       \ 'header':  ['fg', 'Comment'] }
+
+nmap <leader>h :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
+" function! SoftWrap()
+"     let s:old_fo = &formatoptions
+"     let s:old_tw = &textwidth
+"     set fo=
+"     set tw=999999 " works for paragraphs up to 12k lines
+"     normal gggqG
+"     let &fo = s:old_fo
+"     let &tw = s:old_tw
+" endfunction
+
+" unfill paragraph
+noremap <Leader>w vipJ<CR>  
+
+" Apply custom highlights
+fun! s:Highlight()
+  " Hide ~ characters shown for empty lines
+  highlight EndOfBuffer guifg=bg
+  " set window background to theme background
+  highlight NonText guibg=NONE   
+  highlight clear LineNr "set number background to default
+  highlight clear SignColumn
+  highlight FoldColumn guifg=bg guibg=bg
+  highlight clear LineNr
+  highlight conceal guibg=bg
+endfun
+
+call s:Highlight()
+
+" Reapply custom highlights when the color scheme is reloaded
+augroup Highlight
+  autocmd! ColorScheme * call s:Highlight()
+augroup end
 
