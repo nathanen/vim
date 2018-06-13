@@ -120,8 +120,8 @@ set linespace=2
 set wrap linebreak nolist
 set tabstop=4 
 
-set relativenumber
-set number
+" set relativenumber
+" set number
 set backspace=indent,eol,start
 
 set splitright " Split to right by default
