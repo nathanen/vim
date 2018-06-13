@@ -46,8 +46,8 @@ Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'jpo/vim-railscasts-theme'
 Plug 'fenetikm/falcon'
 Plug 'jacoborus/tender.vim'
-" Plug 'joshdick/onedark.vim'
-" Plug 'reedes/vim-colors-pencil'
+Plug 'joshdick/onedark.vim'
+Plug 'reedes/vim-colors-pencil'
 Plug 'MaxSt/FlatColor'
 Plug 'morhetz/gruvbox'
 Plug 'endel/vim-github-colorscheme'
@@ -108,7 +108,7 @@ set history=1000           | "
 
 set guioptions-=r   "hide right scrollbar
 set hidden
-" set cursorline
+set cursorline
 syntax on
 
 set laststatus=0
@@ -263,7 +263,7 @@ nmap <A-k> <Plug>MoveLineUp
     set gdefault " use global flag by default in s: commands
     set smartcase " don't ignore capitals in searches
     " nnoremap <leader><space> :nohls <enter>
-	cnoremap <Tab> <CR>/<up>
+	" cnoremap <Tab> <CR>/<up>
 
     " map /  <Plug>(incsearch-forward)
     " map ?  <Plug>(incsearch-backward)
