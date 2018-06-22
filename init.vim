@@ -21,6 +21,7 @@ Plug 'ervandew/supertab'
 Plug 'sjl/gundo.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'reedes/vim-textobj-sentence'
+Plug 'reedes/vim-textobj-quote'
 Plug 'machakann/vim-highlightedyank'
 
 " if has('python3')
@@ -29,7 +30,7 @@ Plug 'machakann/vim-highlightedyank'
 
 " Filetypes & Syntax
 " Plug 'gabrielelana/vim-markdown'
-Plug 'vimwiki/vimwiki' 
+" Plug 'vimwiki/vimwiki' 
 Plug 'lervag/vimtex'
 Plug 'jceb/vim-orgmode'
 Plug 'vim-pandoc/vim-pandoc'
@@ -39,6 +40,24 @@ Plug 'vim-pandoc/vim-pandoc-after'   "need to set specific modules
 
 au FileType vimwiki set syntax=pandoc
 
+au BufRead,BufNewFile {*.md,*.mkd,*.markdown}            set ft=markdown
+au BufRead,BufNewFile {*.txt, *.wiki}            set ft=markdown
+
+
+augroup textobj_quote
+  autocmd!
+  autocmd FileType markdown call textobj#quote#init()
+  autocmd FileType pandoc call textobj#quote#init()
+  autocmd FileType text call textobj#quote#init({'educate': 0})
+augroup END
+
+map <silent> <leader>qc <Plug>ReplaceWithCurly
+map <silent> <leader>qs <Plug>ReplaceWithStraight
+
+" augroup unicycle
+" 	autocmd!
+" 	  autocmd FileType markdown call UniCycleOn()
+" augroup END
 
 " VIM THEMES/COLORSCHEMES
 Plug 'rakr/vim-one'
@@ -70,10 +89,12 @@ Plug 'junegunn/limelight.vim'
 " Plug 'rhysd/vim-grammarous'
 " Plug 'dbmrq/vim-ditto'
 Plug 'reedes/vim-litecorrect'
-" Plug 'reedes/vim-lexical'
+Plug 'reedes/vim-lexical'
+Plug 'mikewest/vimroom'
+Plug 'jdiamond/UniCycle'
 
-" call litecorrect#init()
-
+autocmd! User GoyoEnter Limelight0.7
+autocmd! User GoyoLeave Limelight!
 
 " Interface
 Plug 'bling/vim-bufferline'
@@ -82,9 +103,10 @@ Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'https://github.com/Alok/notational-fzf-vim'
 
-Plug 'kien/ctrlp.vim'
-" , {'on': ['CtrlP', 'CtrlPMixed', 'CtrlPMRU', 'CtrlBuffers']}
-let g:ctrlp_working_path_mode = 'c'
+" Plug 'kien/ctrlp.vim'
+" DISABLED: using FZF for these purposes
+" " , {'on': ['CtrlP', 'CtrlPMixed', 'CtrlPMRU', 'CtrlBuffers']}
+" let g:ctrlp_working_path_mode = 'c'
 
 
 " Initialize plugin system
@@ -111,7 +133,7 @@ set hidden
 set cursorline
 syntax on
 
-set laststatus=0
+set laststatus=2
 hi FoldColumn ctermbg=none
 set foldcolumn=2
 set foldlevelstart=20
@@ -119,6 +141,7 @@ set foldlevelstart=20
 set linespace=2
 set wrap linebreak nolist
 set tabstop=4 
+" autocmd VimResized * | set columns=72
 
 " set relativenumber
 " set number
@@ -132,10 +155,10 @@ nnoremap <SPACE> <Nop>
 let mapleader = "\<Space>"
 let maplocalleader = ','
 
-nnoremap  <leader>m :CtrlPMixed<CR>
-nnoremap <leader>r :CtrlPMRU<CR>
-nnoremap <leader>f :CtrlPCurFile<CR>
-nnoremap <leader>b :CtrlPBuffer<CR>
+" nnoremap  <leader>m :CtrlPMixed<CR>
+" nnoremap <leader>r :CtrlPMRU<CR>
+" nnoremap <leader>f :CtrlPCurFile<CR>
+" nnoremap <leader>b :CtrlPBuffer<CR>
 
 " Omnicomplete Better Nav
 inoremap <expr> <c-j> ("\<C-n>")
@@ -146,8 +169,6 @@ if has("termguicolors")
 endif
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-set background=dark
- " set background=light
 " colorscheme tender
 " colorscheme falcon
 "let g:lightline = { 'colorscheme': 'tender' }
@@ -158,22 +179,26 @@ set background=dark
 
 
 if has('gui_running')
-	" set background=light
-	" colorscheme one
+	set background=light
+	colorscheme materialbox
 	" set background=dark
+	" colorscheme one
 	" colorscheme falcon
+	" colorscheme Mustang
+
 	" let g:one_allow_italics = 1 
 	" let g:airline_theme='one'
 	" colorscheme pencil
-	colorscheme Mustang
 	let g:pencil_spell_undercurl = 0
 	let macvim_skip_colorscheme=1
 	set macmeta
 	set linespace=3
-	set guifont=Hack:h15
-	" set guifont=Source\ Code\ Pro:h16
+	" set guifont=Hack:h15
+	set guifont=Ubuntu\ Mono:h15	
+	set guifont=Hack:h13
 else
-	colorscheme quantum
+	colorscheme railscasts
+	" colorscheme quantum
 endif
 
 if exists("g:gui_oni")
@@ -205,8 +230,10 @@ if has("nvim")
 	tnoremap <C-k> <C-\><C-N><C-w>k
 	tnoremap <C-l> <C-\><C-N><C-w>l
 
+	set inccommand=split
+
 	" I like relative numbering when in normal mode.
-	autocmd TermOpen * setlocal conceallevel=0 colorcolumn=0 relativenumber
+	" autocmd TermOpen * setlocal conceallevel=0 colorcolumn=0 relativenumber
 
 	" Prefer Neovim terminal insert mode to normal mode.
 	autocmd BufEnter term://* startinsert
@@ -298,10 +325,18 @@ let g:markdown_folding = 1
 command! Marked silent !open -a "Marked 2.app" "%:p"
 
 
-let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes',  'syntax': 'markdown', 'ext': '.txt'}]
+" let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes',  'syntax': 'markdown', 'ext': '.txt'}]
 " let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes'}]
 
  
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,text,pandoc call pencil#init()
+                            \ | call lexical#init()
+                            \ | call litecorrect#init()
+                            " \ | call textobj#quote#init()
+                            \ | call textobj#sentence#init()
+augroup END
 
 " use leader to interact with the system clipboard
 nnoremap <Leader>p "*]p
@@ -369,8 +404,11 @@ set encoding=utf8
       \   <bang>0 ? fzf#vim#with_preview('up:60%')
       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
       \   <bang>0)
-    " nnoremap <leader>f :Files<cr>
-    " nnoremap <leader>b :Buffers<cr>
+    nnoremap <silent> <leader>f :Files<cr>
+	nmap <silent> <leader>g :GFiles<CR>
+    nnoremap <silent> <leader>b :Buffers<cr>
+	nmap <silent> <leader>m :History<CR>
+
     let g:nv_search_paths = ['/Users/nensmeng/Data/1-academic/simplenotes']
     let g:nv_use_short_pathnames = 1
     let g:nv_default_extension = '.txt' 
@@ -434,4 +472,6 @@ call s:Highlight()
 augroup Highlight
   autocmd! ColorScheme * call s:Highlight()
 augroup end
+
+
 
