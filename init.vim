@@ -38,10 +38,8 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'vim-pandoc/vim-pandoc-after'   "need to set specific modules
 " Plug 'vim-pandoc/vim-markdownfootnotes'
 
-au FileType vimwiki set syntax=pandoc
-
-au BufRead,BufNewFile {*.md,*.mkd,*.markdown}            set ft=markdown
-au BufRead,BufNewFile {*.txt, *.wiki}            set ft=markdown
+au BufRead,BufNewFile *.md,*.mkd,*.markdown set ft=markdown
+au BufRead,BufNewFile *.txt,*.wiki set ft=markdown
 
 
 augroup textobj_quote
@@ -53,11 +51,6 @@ augroup END
 
 map <silent> <leader>qc <Plug>ReplaceWithCurly
 map <silent> <leader>qs <Plug>ReplaceWithStraight
-
-" augroup unicycle
-" 	autocmd!
-" 	  autocmd FileType markdown call UniCycleOn()
-" augroup END
 
 " VIM THEMES/COLORSCHEMES
 Plug 'rakr/vim-one'
@@ -132,6 +125,9 @@ set guioptions-=r   "hide right scrollbar
 set hidden
 set cursorline
 syntax on
+
+
+autocmd InsertEnter :* highlight  Cursor guifg='green'
 
 set laststatus=2
 hi FoldColumn ctermbg=none
@@ -409,7 +405,7 @@ set encoding=utf8
     nnoremap <silent> <leader>b :Buffers<cr>
 	nmap <silent> <leader>m :History<CR>
 
-    let g:nv_search_paths = ['/Users/nensmeng/Data/1-academic/simplenotes']
+    let g:nv_search_paths = ['/Users/nensmeng/Data/1-academic/simplenotes', '/Users/nensmeng/superlinks/personal/motorcycle/motorcycle-notes']
     let g:nv_use_short_pathnames = 1
     let g:nv_default_extension = '.txt' 
     " let g:nv_search_paths = ['/tmp/test-nvim']
