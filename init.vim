@@ -23,6 +23,8 @@ Plug 'kana/vim-textobj-user'
 Plug 'reedes/vim-textobj-sentence'
 Plug 'reedes/vim-textobj-quote'
 Plug 'machakann/vim-highlightedyank'
+Plug 'majutsushi/tagbar'
+
 
 " if has('python3')
 "     let g:gundo_prefer_python3 = 1
@@ -30,7 +32,7 @@ Plug 'machakann/vim-highlightedyank'
 
 " Filetypes & Syntax
 " Plug 'gabrielelana/vim-markdown'
-" Plug 'vimwiki/vimwiki' 
+Plug 'vimwiki/vimwiki' 
 Plug 'lervag/vimtex'
 Plug 'jceb/vim-orgmode'
 Plug 'vim-pandoc/vim-pandoc'
@@ -39,7 +41,6 @@ Plug 'vim-pandoc/vim-pandoc-after'   "need to set specific modules
 " Plug 'vim-pandoc/vim-markdownfootnotes'
 
 au BufRead,BufNewFile *.md,*.mkd,*.markdown set ft=markdown
-au BufRead,BufNewFile *.txt,*.wiki set ft=markdown
 
 
 augroup textobj_quote
@@ -127,8 +128,6 @@ set cursorline
 syntax on
 
 
-autocmd InsertEnter :* highlight  Cursor guifg='green'
-
 set laststatus=2
 hi FoldColumn ctermbg=none
 set foldcolumn=2
@@ -160,6 +159,7 @@ let maplocalleader = ','
 inoremap <expr> <c-j> ("\<C-n>")
 inoremap <expr> <c-k> ("\<C-p>")
 
+
 if has("termguicolors")
     set termguicolors
 endif
@@ -174,47 +174,6 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " let g:airline_theme='quantum'
 
 
-if has('gui_running')
-	set background=light
-	colorscheme materialbox
-	" set background=dark
-	" colorscheme one
-	" colorscheme falcon
-	" colorscheme Mustang
-
-	" let g:one_allow_italics = 1 
-	" let g:airline_theme='one'
-	" colorscheme pencil
-	let g:pencil_spell_undercurl = 0
-	let macvim_skip_colorscheme=1
-	set macmeta
-	set linespace=3
-	" set guifont=Hack:h15
-	set guifont=Ubuntu\ Mono:h15	
-	set guifont=Hack:h13
-else
-	colorscheme railscasts
-	" colorscheme quantum
-endif
-
-if exists("g:gui_oni")
-		" set guifont=Hack:h16
-		" colorscheme artesanal
-		colorscheme Mustang
-		" the following is required for oni-minimal
-		" filetype off                  " required 
-		set noswapfile
-		set smartcase
-
-		" Turn off statusbar, because it is externalized
-		set noshowmode
-		set noruler
-		set laststatus=0
-		set noshowcmd
-
-		" Enable GUI mouse behavior
-		set mouse=a
-endif
 
 
 if has("nvim")
@@ -242,7 +201,7 @@ noremap  <buffer> <silent> 0 g0
 noremap  <buffer> <silent> $ g$
 " allows for ctrl-e (end) and ctrl-a (start) in insert mode
 inoremap <C-e> <C-o>$
-inoremap <C-a> <C-o>0
+" inoremap <C-a> <C-o>0
 
 " also in normal mode
 noremap <C-e> $
@@ -276,7 +235,6 @@ nmap <A-j> <Plug>MoveLineDown
 nmap <A-k> <Plug>MoveLineUp
 
 " Searching
-    " set search case to a good configuration http://vim.wikia.com/wiki/Searching 
     set ignorecase
     set smartcase
     set incsearch     " search characters as they're entered
@@ -321,10 +279,16 @@ let g:markdown_folding = 1
 command! Marked silent !open -a "Marked 2.app" "%:p"
 
 
-" let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes',  'syntax': 'markdown', 'ext': '.txt'}]
-" let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes'}]
 
+
+let g:vimwiki_list = [{'path': '~/Data/1-academic/simplenotes',  'syntax': 'markdown', 'ext': '.txt'}, {'path': '~/Data/3-Personal/motorcycle/motorcycle-notes',  'syntax': 'markdown', 'ext': '.md'}]
+" let g:vimwiki_global_ext = 0
  
+let g:vimwiki_folding = 'custom'  
+au BufRead,BufNewFile *.txt,*.wiki set ft=markdown
+let g:vimwiki_table_mappings = 0
+
+
 augroup pencil
   autocmd!
   autocmd FileType markdown,text,pandoc call pencil#init()
@@ -405,10 +369,11 @@ set encoding=utf8
     nnoremap <silent> <leader>b :Buffers<cr>
 	nmap <silent> <leader>m :History<CR>
 
-    let g:nv_search_paths = ['/Users/nensmeng/Data/1-academic/simplenotes', '/Users/nensmeng/superlinks/personal/motorcycle/motorcycle-notes']
+    let g:nv_search_paths = ['~/Data/1-academic/simplenotes']
+	    " let g:nv_search_paths = ['~/Data/1-academic/simplenotes', '~/superlinks/personal/motorcycle/motorcycle-notes']
+
     let g:nv_use_short_pathnames = 1
     let g:nv_default_extension = '.txt' 
-    " let g:nv_search_paths = ['/tmp/test-nvim']
     let g:nv_preview_direction = 'up'
     nnoremap <leader>n :NV<cr>
 
@@ -447,19 +412,26 @@ endfunc
 " endfunction
 
 " unfill paragraph
-noremap <Leader>w vipJ<CR>  
+" noremap <Leader>w vipJ<CR>  
 
 " Apply custom highlights
 fun! s:Highlight()
-  " Hide ~ characters shown for empty lines
-  highlight EndOfBuffer guifg=bg
-  " set window background to theme background
-  highlight NonText guibg=NONE   
-  highlight clear LineNr "set number background to default
-  highlight clear SignColumn
-  highlight FoldColumn guifg=bg guibg=bg
-  highlight clear LineNr
-  highlight conceal guibg=bg
+		" Hide ~ characters shown for empty lines
+		highlight EndOfBuffer guifg=bg
+		" set window background to theme background
+		highlight NonText guibg=NONE   
+		highlight clear LineNr "set number background to default
+		highlight clear SignColumn
+		highlight FoldColumn guifg=bg guibg=bg
+		highlight clear LineNr
+		highlight conceal guibg=bg
+  
+		" set cursor color/
+		highlight cursor guifg='orange'
+		autocmd InsertEnter :* highlight  cursor guifg='green'
+		autocmd InsertLeave :* highlight  cursor guifg='orange'
+
+
 endfun
 
 call s:Highlight()
@@ -469,5 +441,60 @@ augroup Highlight
   autocmd! ColorScheme * call s:Highlight()
 augroup end
 
+if has('gui_running')
+		set background=light
+		colorscheme Pencil
+		" colorscheme materialbox
+	" set background=dark
+	" colorscheme one
+	" colorscheme falcon
+	" colorscheme Mustang
 
+	" let g:one_allow_italics = 1 
+	" let g:airline_theme='one'
+	" colorscheme pencil
+	let g:pencil_spell_undercurl = 0
+	let macvim_skip_colorscheme=1
+	set macmeta
+	set linespace=3
+	" set guifont=Hack:h15
+	" set guifont=Ubuntu\ Mono:h15	
+	" set guifont=Hack:h13
+		set guifont=Roboto\ Mono:h15	
+else
+	colorscheme railscasts
+	" colorscheme quantum
+endif
+
+if exists("g:gui_oni")
+		" set guifont=Hack:h16
+		" colorscheme artesanal
+		" colorscheme Mustang
+		" the following is required for oni-minimal
+		" filetype off                  " required 
+		set noswapfile
+		set smartcase
+
+		" Turn off statusbar, because it is externalized
+		set noshowmode
+		set noruler
+		set laststatus=0
+		set noshowcmd
+
+		" Enable GUI mouse behavior
+		set mouse=a
+endif
+
+
+let g:tagbar_ctags_bin='/usr/local/bin/ctags'
+
+ let g:tagbar_type_vimwiki = {
+ 			\   'ctagstype':'vimwiki'
+ 			\ , 'kinds':['h:header']
+ 			\ , 'sro':'&&&'
+ 			\ , 'kind2scope':{'h':'header'}
+ 			\ , 'sort':0
+ 			\ , 'ctagsbin':'~/bin/vwtags.py'
+ 			\ , 'ctagsargs': 'markdown'
+ 			\ }
 
