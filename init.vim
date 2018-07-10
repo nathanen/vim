@@ -1,3 +1,7 @@
+if has('python3')
+  silent! python3 1
+endif
+
 " vim-plug (https://github.com/junegunn/vim-plug) settings 
 " Automatically install vim-plug and run PlugInstall 
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -87,8 +91,8 @@ Plug 'reedes/vim-lexical'
 Plug 'mikewest/vimroom'
 Plug 'jdiamond/UniCycle'
 
-autocmd! User GoyoEnter Limelight0.7
-autocmd! User GoyoLeave Limelight!
+" autocmd! User GoyoEnter Limelight0.7
+" autocmd! User GoyoLeave Limelight!
 
 " Interface
 Plug 'bling/vim-bufferline'
@@ -369,8 +373,8 @@ set encoding=utf8
     nnoremap <silent> <leader>b :Buffers<cr>
 	nmap <silent> <leader>m :History<CR>
 
-    let g:nv_search_paths = ['~/Data/1-academic/simplenotes']
-	    " let g:nv_search_paths = ['~/Data/1-academic/simplenotes', '~/superlinks/personal/motorcycle/motorcycle-notes']
+    " let g:nv_search_paths = ['~/Data/1-academic/simplenotes']
+	    let g:nv_search_paths = ['~/Data/1-academic/simplenotes', '~/superlinks/personal/motorcycle/motorcycle-notes']
 
     let g:nv_use_short_pathnames = 1
     let g:nv_default_extension = '.txt' 
@@ -412,7 +416,7 @@ endfunc
 " endfunction
 
 " unfill paragraph
-" noremap <Leader>w vipJ<CR>  
+noremap <Leader>q vipJ<CR>  
 
 " Apply custom highlights
 fun! s:Highlight()
