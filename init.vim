@@ -61,7 +61,7 @@ map <silent> <leader>qs <Plug>ReplaceWithStraight
 Plug 'rakr/vim-one'
 Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'jpo/vim-railscasts-theme'
-Plug 'fenetikm/falcon'
+" Plug 'fenetikm/falcon'
 Plug 'jacoborus/tender.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'reedes/vim-colors-pencil'
